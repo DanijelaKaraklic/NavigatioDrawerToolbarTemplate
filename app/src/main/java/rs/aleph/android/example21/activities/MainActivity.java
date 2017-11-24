@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-    private int productId = 0;
+
     private static int NOTIFICATION_ID = 1;
 
     @Override
@@ -84,6 +84,8 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
+
+
 
         // Draws navigation items
         //U navigation drawer postavimo koje to elemente zelimo da imamo. Ikonicu, naziv i krratak opis
@@ -292,7 +294,8 @@ public class MainActivity extends AppCompatActivity{
 
         }
 
-
+        Intent intent = new Intent(MainActivity.this,DetailActivity.class);
+        startActivity(intent);
 
 
     }
