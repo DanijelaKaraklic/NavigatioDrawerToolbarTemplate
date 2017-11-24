@@ -27,8 +27,10 @@
             android:name="rs.aleph.android.example21.activities.DetailActivity"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/detail_activity"
-            android:parentActivityName="rs.aleph.android.example21.activities.MainActivity"
+
             android:theme="@style/AppTheme.NoActionBar" />
+
+      <!--  android:parentActivityName="rs.aleph.android.example21.activities.MainActivity"-->
     </application>
 
 </manifest>

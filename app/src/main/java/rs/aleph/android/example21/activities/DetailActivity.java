@@ -20,7 +20,7 @@ public class DetailActivity extends AppCompatActivity {
 
 
 
-    private int productId = 0;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
