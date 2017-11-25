@@ -36,5 +36,6 @@
     <string name="drawer_Settings_long">Промените подешавања апликације</string>
     <string name="drawer_about">О апликацији</string>
     <string name="drawer_about_long">О нама</string>
+    <string name="navigation_re_long">Show all Real Estate</string>
 
 </resources>

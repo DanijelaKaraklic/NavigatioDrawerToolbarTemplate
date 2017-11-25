@@ -15,8 +15,8 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 
-import rs.aleph.android.example21.db.model.Category;
-import rs.aleph.android.example21.db.model.Product;
+
+import rs.aleph.android.example21.db.model.RealEstate;
 
 
 /**
@@ -30,8 +30,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     //i pocetnu verziju baze. Obicno krece od 1
     private static final int    DATABASE_VERSION = 1;
 
-    private Dao<Product, Integer> mProductDao = null;
-    private Dao<Category,Integer> mCategoryDao = null;
+    private Dao<RealEstate, Integer> mRealEstateDao = null;
+
 
     //Potrebno je dodati konstruktor zbog pravilne inicijalizacije biblioteke
     public DatabaseHelper(Context context) {
@@ -43,8 +43,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
-            TableUtils.createTable(connectionSource, Product.class);
-            TableUtils.createTable(connectionSource,Category.class);
+            TableUtils.createTable(connectionSource, RealEstate.class);
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -54,8 +54,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
-            TableUtils.dropTable(connectionSource, Product.class, true);
-            TableUtils.dropTable(connectionSource,Category.class,true);
+            TableUtils.dropTable(connectionSource, RealEstate.class, true);
+
             onCreate(db, connectionSource);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -64,25 +64,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     //jedan Dao objekat sa kojim komuniciramo. Ukoliko imamo vise tabela
     //potrebno je napraviti Dao objekat za svaku tabelu
-    public Dao<Product, Integer> getProductDao() throws SQLException {
-        if (mProductDao == null) {
-            mProductDao = getDao(Product.class);
+    public Dao<RealEstate, Integer> getRealEstateDao() throws SQLException {
+        if (mRealEstateDao == null) {
+            mRealEstateDao = getDao(RealEstate.class);
         }
 
-        return mProductDao;
-    }
-    public Dao<Category,Integer> getCategoryDao() throws SQLException{
-        if (mCategoryDao == null){
-            mCategoryDao = getDao(Category.class);
-        }
-        return mCategoryDao;
+        return mRealEstateDao;
     }
 
     //obavezno prilikom zatvarnaj rada sa bazom osloboditi resurse
     @Override
     public void close() {
-        mProductDao = null;
-        mCategoryDao = null;
+        mRealEstateDao = null;
+
 
         super.close();
     }

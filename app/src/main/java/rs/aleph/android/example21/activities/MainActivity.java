@@ -21,28 +21,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RatingBar;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import rs.aleph.android.example21.R;
 import rs.aleph.android.example21.adapters.DrawerListAdapter;
 import rs.aleph.android.example21.db.DatabaseHelper;
-import rs.aleph.android.example21.db.model.Category;
-import rs.aleph.android.example21.db.model.Product;
-import rs.aleph.android.example21.dialogs.AboutDialog;
+import rs.aleph.android.example21.db.model.RealEstate;
 import rs.aleph.android.example21.model.NavigationItem;
 
 public class MainActivity extends AppCompatActivity{
@@ -96,7 +89,7 @@ public class MainActivity extends AppCompatActivity{
 
         // Draws navigation items
         //U navigation drawer postavimo koje to elemente zelimo da imamo. Ikonicu, naziv i krratak opis
-        navigationItems.add(new NavigationItem(getString(R.string.drawer_home), getString(R.string.drawer_home_long), R.drawable.ic_action_product));
+        navigationItems.add(new NavigationItem(getString(R.string.drawer_home), getString(R.string.navigation_re_long), R.drawable.ic_action_real_estates));
         navigationItems.add(new NavigationItem(getString(R.string.drawer_settings),getString(R.string.drawer_Settings_long), R.drawable.ic_action_settings));
         //navigationItems.add(new NavigationItem(getString(R.string.drawer_about), getString(R.string.drawer_about_long), R.drawable.ic_action_about));
 
@@ -172,6 +165,29 @@ public class MainActivity extends AppCompatActivity{
         };
 
 
+        final ListView listView = (ListView)findViewById(R.id.real_estates);
+
+        try {
+            List<RealEstate> listRs = getDatabaseHelper().getRealEstateDao().queryForAll();
+            ListAdapter adapter1 = new ArrayAdapter<RealEstate>(MainActivity.this,R.layout.list_item,listRs);
+            listView.setAdapter(adapter1);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(MainActivity.this,DetailActivity.class);
+                    RealEstate r = (RealEstate)listView.getItemAtPosition(position);
+                    long selectedItemId = r.getmId();
+                    intent.putExtra("selectedItemId",selectedItemId);
+                    startActivity(intent);
+                }
+            });
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
 
 
 
@@ -235,7 +251,7 @@ public class MainActivity extends AppCompatActivity{
 
         //Showing a dialog
 
-        final Dialog dialog = new Dialog(MainActivity.this);
+/*        final Dialog dialog = new Dialog(MainActivity.this);
 
         dialog.setContentView(R.layout.dialog_layout);
 
@@ -255,7 +271,7 @@ public class MainActivity extends AppCompatActivity{
 
                     }
                 });
-                        /*final Spinner image = (Spinner) dialog.findViewById(R.id.sp_dialog_images);
+                        *//*final Spinner image = (Spinner) dialog.findViewById(R.id.sp_dialog_images);
 
                         List<String> images  = new ArrayList<String>();
                         images.add("apples.jpg");
@@ -263,7 +279,7 @@ public class MainActivity extends AppCompatActivity{
                         images.add("oranges.jpg");
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item, images);
                         image.setAdapter(adapter);
-                        image.setSelection(1);*/
+                        image.setSelection(1);*//*
 
                 Spinner category = (Spinner)dialog.findViewById(R.id.sp_dialog_categories);
 
@@ -288,7 +304,7 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        dialog.show();
+        dialog.show();*/
 
 
 
@@ -297,15 +313,38 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-        if (savedInstanceState == null) {
-
-        }
 
 
 
     }
 
+    private void refresh(){
+        ListView listview = (ListView) findViewById(R.id.real_estates);
 
+        if (listview != null){
+            ArrayAdapter<RealEstate> adapter = (ArrayAdapter<RealEstate>) listview.getAdapter();
+
+            if(adapter!= null)
+            {
+                try {
+                    adapter.clear();
+                    List<RealEstate> list = getDatabaseHelper().getRealEstateDao().queryForAll();
+
+                    adapter.addAll(list);
+
+                    adapter.notifyDataSetChanged();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refresh();
+    }
 
     /**
      * Da bi dobili pristup Galeriji slika na uredjaju
@@ -385,16 +424,6 @@ public class MainActivity extends AppCompatActivity{
         } else if (position == 1){
             Intent settings = new Intent(MainActivity.this,SettingsActivity.class);
             startActivity(settings);
-        } else if (position == 2){
-            if (dialog == null){
-                dialog = new AboutDialog(MainActivity.this).prepareDialog();
-            } else {
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-            }
-
-            dialog.show();
         }
 
         //ovom liniom oznacavamo elemtn iz liste da je selektovano.
@@ -416,7 +445,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-    private void addItem(String name, String description, float rating, Category category, String image){
+   /* private void addItem(String name, String description, float rating, Category category, String image){
 
         Product product = new Product();
         product.setmName(name);
@@ -455,27 +484,8 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    private void refresh() {
-        ListView listview = (ListView) findViewById(R.id.products);
 
-        if (listview != null){
-            ArrayAdapter<Product> adapter = (ArrayAdapter<Product>) listview.getAdapter();
-
-            if(adapter!= null)
-            {
-                try {
-                    adapter.clear();
-                    List<Product> list = getDatabaseHelper().getProductDao().queryForAll();
-
-                    adapter.addAll(list);
-
-                    adapter.notifyDataSetChanged();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+    */
 
     public DatabaseHelper getDatabaseHelper() {
         if (databaseHelper == null) {
@@ -564,6 +574,60 @@ public class MainActivity extends AppCompatActivity{
 
                 break;
             case R.id.action_add:
+                final Dialog dialog = new Dialog(MainActivity.this);
+
+                dialog.setContentView(R.layout.dialog_layout);
+
+                dialog.setTitle("Insert an actor");
+
+                Button ok = (Button) dialog.findViewById(R.id.ok);
+                ok.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        final EditText editName = (EditText) dialog.findViewById(R.id.product_name);
+                        final EditText editDescription = (EditText) dialog.findViewById(R.id.product_description);
+                        final RatingBar ratingBar = (RatingBar) dialog.findViewById(R.id.rb_product);
+                        Button btnImage = (Button) dialog.findViewById(R.id.btn_browse_image);
+                        btnImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        });
+                        *//*final Spinner image = (Spinner) dialog.findViewById(R.id.sp_dialog_images);
+
+                        List<String> images  = new ArrayList<String>();
+                        images.add("apples.jpg");
+                        images.add("bananas.jpg");
+                        images.add("oranges.jpg");
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item, images);
+                        image.setAdapter(adapter);
+                        image.setSelection(1);*//*
+
+                        Spinner category = (Spinner)dialog.findViewById(R.id.sp_dialog_categories);
+
+
+                        //ArrayAdapter<Category> adapter1 = new ArrayAdapter<Category>(MainActivity.this,android.R.layout.simple_spinner_item,categories);
+                        //category.setAdapter(adapter1);
+                        //category.setSelection(0);
+
+
+                        dialog.dismiss();
+
+
+                    }
+                });
+
+                Button cancel = (Button) dialog.findViewById(R.id.cancel);
+                cancel.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        //Toast.makeText(MainActivity.this, R.string.dialog_message_no,Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                dialog.show();
 
                     Toast.makeText(MainActivity.this, "Sinhronizacija pokrenuta u glavnoj niti. Nije dobro :(",Toast.LENGTH_SHORT).show();
 
