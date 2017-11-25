@@ -1,15 +1,20 @@
 package rs.aleph.android.example21.activities;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +46,8 @@ import rs.aleph.android.example21.dialogs.AboutDialog;
 import rs.aleph.android.example21.model.NavigationItem;
 
 public class MainActivity extends AppCompatActivity{
+    private static final int SELECT_PICTURE = 1;
+    private static final String TAG = "PERMISSIONS";
     /* The click listner for ListView in the navigation drawer */
     /*
     *Ova klasa predstavlja reakciju na klik neke od stavki iz navigation drawer-a
@@ -294,9 +301,63 @@ public class MainActivity extends AppCompatActivity{
 
         }
 
-       
+
 
     }
+
+
+
+    /**
+     * Da bi dobili pristup Galeriji slika na uredjaju
+     * moramo preko URI-ja pristupiti delu baze gde su smestene
+     * slike uredjaja. Njima mozemo pristupiti koristeci sistemski
+     * ContentProvider i koristeci URI images/* putanju
+     *
+     * Posto biramo sliku potrebno je da pozovemo aktivnost koja icekuje rezultat
+     * Kada dobijemo rezultat nazad prikazemo sliku i dobijemo njenu tacnu putanju
+     * */
+    private void selectPicture(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+    }
+
+    /**
+     * Sismtemska metoda koja se automatksi poziva ako se
+     * aktivnost startuje u startActivityForResult rezimu
+     *
+     * Ako je ti slucaj i ako je sve proslo ok, mozemo da izvucemo
+     * sadrzaj i to da prikazemo. Rezultat NIJE sliak nego URI do te slike.
+     * Na osnovu toga mozemo dobiti tacnu putnaju do slike ali i samu sliku
+     * */
+    /*public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                Uri selectedImageUri = data.getData();
+                //String selectedImagePath = selectedImageUri.getPath();
+
+                Dialog dialog = new Dialog(MainActivity.this);
+                dialog.setContentView(R.layout.image_dialog);
+                dialog.setTitle("Image dialog");
+
+                ImageView image = (ImageView) dialog.findViewById(R.id.image);
+
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+                    image.setImageBitmap(bitmap);
+                    Toast.makeText(this, selectedImageUri.getPath(),Toast.LENGTH_SHORT).show();
+
+                    dialog.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }*/
+
+
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -436,6 +497,56 @@ public class MainActivity extends AppCompatActivity{
         getMenuInflater().inflate(R.menu.activity_item_master, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+
+
+    /**
+     * Od verzije Marshmallow Android uvodi pojam dinamickih permisija
+     * Sto korisnicima olaksva rad, a programerima uvodi dodadan posao.
+     * Cela ideja ja u tome, da se permisije ili prava da aplikcija
+     * nesto uradi, ne zahtevaju prilikom instalacije, nego prilikom
+     * prve upotrebe te funkcionalnosti. To za posledicu ima da mi
+     * svaki put moramo da proverimo da li je odredjeno pravo dopustneo
+     * ili ne. Iako nije da ponovo trazimo da korisnik dopusti, u protivnom
+     * tu funkcionalnost necemo obaviti uopste.
+     * */
+    public  boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED &&
+                    checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                            == PackageManager.PERMISSION_GRANTED) {
+                Log.v(TAG,"Permission is granted");
+                return true;
+            } else {
+
+                Log.v(TAG,"Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v(TAG,"Permission is granted");
+            return true;
+        }
+    }
+
+    /**
+     *
+     * Ako odredjena funkcija nije dopustena, saljemo zahtev android
+     * sistemu da zahteva odredjene permisije. Korisniku seprikazuje
+     * diloag u kom on zeli ili ne da dopusti odedjene permisije.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults[0]== PackageManager.PERMISSION_GRANTED
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+            Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+        }
+    }
+
 
     /**
      *Metoda koja je zaduzena za rekaciju tj dogadjaj kada se klikne na neki

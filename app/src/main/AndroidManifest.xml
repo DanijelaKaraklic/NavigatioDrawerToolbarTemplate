@@ -2,7 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="rs.aleph.android.example21">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <!--
+    Posto zelimo da pisemo odnosno citamo iz skladista podataka moramo traziti i
+    odredjena dopustenja od strane operativnog sistema
+    -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:label="@string/app_name"
@@ -27,10 +35,9 @@
             android:name="rs.aleph.android.example21.activities.DetailActivity"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/detail_activity"
-
+            android:parentActivityName="rs.aleph.android.example21.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
-      <!--  android:parentActivityName="rs.aleph.android.example21.activities.MainActivity"-->
     </application>
 
 </manifest>
