@@ -11,7 +11,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,10 +20,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-    private AlertDialog dialog;
+    //private AlertDialog dialog;
     //za rad sa bazom
     private DatabaseHelper databaseHelper;
 
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-
+    private RealEstate realEstate;
     private static int NOTIFICATION_ID = 1;
 
     @Override
@@ -487,12 +486,6 @@ public class MainActivity extends AppCompatActivity{
 
     */
 
-    public DatabaseHelper getDatabaseHelper() {
-        if (databaseHelper == null) {
-            databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
-        }
-        return databaseHelper;
-    }
 
 
     /**Toolbar**/
@@ -569,10 +562,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_edit:
-                Toast.makeText(MainActivity.this, "Sinhronizacija pokrenuta u pozadini niti. dobro :)",Toast.LENGTH_SHORT).show();
 
-                break;
             case R.id.action_add:
                 final Dialog dialog = new Dialog(MainActivity.this);
 
@@ -584,32 +574,31 @@ public class MainActivity extends AppCompatActivity{
                 ok.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
-                        final EditText editName = (EditText) dialog.findViewById(R.id.product_name);
-                        final EditText editDescription = (EditText) dialog.findViewById(R.id.product_description);
-                        final RatingBar ratingBar = (RatingBar) dialog.findViewById(R.id.rb_product);
-                        Button btnImage = (Button) dialog.findViewById(R.id.btn_browse_image);
-                        btnImage.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
 
-                            }
-                        });
-                        *//*final Spinner image = (Spinner) dialog.findViewById(R.id.sp_dialog_images);
+                        final EditText editName = (EditText) dialog.findViewById(R.id.re_name);
+                        final EditText editDescription = (EditText) dialog.findViewById(R.id.re_description);
+                        final EditText editImage = (EditText) dialog.findViewById(R.id.re_image);
+                        final EditText editAdress = (EditText) dialog.findViewById(R.id.re_adress);
+                        final EditText editTel = (EditText) dialog.findViewById(R.id.re_telephone);
+                        final EditText editQuad = (EditText) dialog.findViewById(R.id.re_quad);
+                        final EditText editRoom = (EditText) dialog.findViewById(R.id.re_room);
+                        final EditText editPrice = (EditText) dialog.findViewById(R.id.re_price);
 
-                        List<String> images  = new ArrayList<String>();
-                        images.add("apples.jpg");
-                        images.add("bananas.jpg");
-                        images.add("oranges.jpg");
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item, images);
-                        image.setAdapter(adapter);
-                        image.setSelection(1);*//*
+                        realEstate.setmName(editName.getText().toString());
+                        realEstate.setmDescription(editDescription.getText().toString());
+                        realEstate.setmImage(editImage.getText().toString());
+                        realEstate.setmAdress(editAdress.getText().toString());
+                        realEstate.setmTel(Integer.parseInt(editTel.getText().toString()));
+                        realEstate.setmQuadrature(Double.parseDouble(editQuad.getText().toString()));
+                        realEstate.setmRoom(Integer.parseInt(editRoom.getText().toString()));
+                        realEstate.setmPrice(Double.parseDouble(editPrice.getText().toString()));
 
-                        Spinner category = (Spinner)dialog.findViewById(R.id.sp_dialog_categories);
-
-
-                        //ArrayAdapter<Category> adapter1 = new ArrayAdapter<Category>(MainActivity.this,android.R.layout.simple_spinner_item,categories);
-                        //category.setAdapter(adapter1);
-                        //category.setSelection(0);
+                        try {
+                            databaseHelper.getRealEstateDao().create(realEstate);
+                            refresh();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
 
 
                         dialog.dismiss();
@@ -623,19 +612,14 @@ public class MainActivity extends AppCompatActivity{
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
-                        //Toast.makeText(MainActivity.this, R.string.dialog_message_no,Toast.LENGTH_SHORT).show();
+
                     }
                 });
 
                 dialog.show();
 
-                    Toast.makeText(MainActivity.this, "Sinhronizacija pokrenuta u glavnoj niti. Nije dobro :(",Toast.LENGTH_SHORT).show();
-
-
                 break;
-            case R.id.action_delete:
 
-                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -648,26 +632,13 @@ public class MainActivity extends AppCompatActivity{
         getSupportActionBar().setTitle(title);
     }
 
-
-
-
-
-
-
-
-
-   /* @Override
-    public void onBackPressed() {
-
-        if (landscapeMode) {
-            finish();
-        } else if (listShown == true) {
-            finish();
-        } else if (detailShown == true) {
-
+    public DatabaseHelper getDatabaseHelper() {
+        if (databaseHelper == null) {
+            databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
         }
+        return databaseHelper;
+    }
 
-    }*/
 
     @Override
     protected void onDestroy() {

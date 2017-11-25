@@ -6,13 +6,16 @@
     android:minWidth="300dp"
     android:minHeight="200dp">
 
+
+
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="@string/dialog_in_name"
         android:textSize="20sp"/>
     <EditText
-        android:id="@+id/product_name"
+        android:id="@+id/re_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"/>
@@ -20,67 +23,82 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="@string/dialog_in_description"
         android:textSize="20sp"/>
     <EditText
-        android:id="@+id/product_description"
+        android:id="@+id/re_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="@string/dialog_in_image"
         android:textSize="20sp"/>
-    <RatingBar
-        android:id="@+id/rb_product"
+    <EditText
+        android:id="@+id/re_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:numStars="5"/>
-    <!--  <EditText
-          android:id="@+id/product_rating"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:textSize="16sp"/>-->
+        android:textSize="16sp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_in_adress"
+        android:textSize="20sp"/>
+    <EditText
+        android:id="@+id/re_adress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_in_telephone"
+        android:textSize="20sp"/>
+    <EditText
+        android:id="@+id/re_telephone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"/>
+
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="@string/dialog_in_quadrature"
         android:textSize="20sp"/>
-
-    <!--  <Spinner
-          android:id="@+id/sp_dialog_images"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content">
-
-
-      </Spinner>-->
-    <Button
-        android:id="@+id/btn_browse_image"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/re_quad"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="16sp"
-        android:foregroundGravity="center_horizontal"/>
-    <ImageView
-        android:id="@+id/selected_image_from_gallery"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center_horizontal"/>
+        android:textSize="16sp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="@string/dialog_in_room"
         android:textSize="20sp"/>
+    <EditText
+        android:id="@+id/re_room"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_in_price"
+        android:textSize="20sp"/>
+    <EditText
+        android:id="@+id/re_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"/>
 
-    <Spinner
-        android:id="@+id/sp_dialog_categories"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
-    </Spinner>
+
+
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -91,13 +109,13 @@
             android:id="@+id/ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""/>
+            android:text="@string/btn_dialog_in_ok"/>
 
         <Button
             android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""/>
+            android:text="@string/btn_dialog_in_cancel"/>
 
 
 

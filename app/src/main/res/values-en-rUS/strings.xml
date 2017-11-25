@@ -37,6 +37,16 @@
     <string name="drawer_about">About</string>
     <string name="drawer_about_long">About Us</string>
     <string name="navigation_re_long">Show all Real Estate</string>
+    <string name="dialog_in_name">Name</string>
+    <string name="dialog_in_description">Description</string>
+    <string name="dialog_in_image">Image</string>
+    <string name="dialog_in_adress">Adress</string>
+    <string name="dialog_in_telephone">Telephone</string>
+    <string name="dialog_in_quadrature">Quadrature</string>
+    <string name="dialog_in_room">Room</string>
+    <string name="dialog_in_price">Price</string>
+    <string name="btn_dialog_in_ok">OK</string>
+    <string name="btn_dialog_in_cancel">CANCEL</string>
 
 
 </resources>
